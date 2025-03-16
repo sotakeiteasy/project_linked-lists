@@ -5,7 +5,7 @@ class Node {
     }
 }
 
-class LinkedList {
+export class LinkedList {
     constructor() {
         this.head = null
         this.length = 0;
@@ -49,11 +49,11 @@ class LinkedList {
         return this.length
     }
 
-    head() {
+    getHead() {
         return this.head
     }
 
-    tail() {
+    getTail() {
         return this.tail
     }
 
@@ -67,18 +67,94 @@ class LinkedList {
         }
         return current
     }
+
+    pop() {
+        if(!this.head) return null
+        
+        if(this.length===1) {
+            this.head = null;
+            this.tail = null;
+            this.length = 0;
+            return this
+        }
+
+        let prev = null
+        let current = this.head
+        while(current.nextNode) {
+            prev = current
+            current = current.nextNode
+        }
+        prev.nextNode=null
+        this.tail = prev
+        this.length--
+
+        return this
+    }
+
+    contains(value) {
+        if(!this.head) return null
+        let current = this.head
+        for(let i=0; i < this.length; i++) {
+            if(current.value === value) return true
+            current = current.nextNode
+        }
+        return false
+    }
+
+    find(value) {
+        if(!this.head) return null
+        let current = this.head
+        for(let i=0; i < this.length; i++) {
+            if(current.value === value) return i
+            current = current.nextNode
+        }
+        return null
+    }
+
+    toString() {
+        let result = ""
+        let current = this.head
+        for(let i=0; i < this.length; i++) {
+            result += `( ${current.value} ) -> `
+            current = current.nextNode
+        }
+        result += 'null'
+        return result
+        // ( value ) -> ( value ) -> ( value ) -> null
+    }
+
+    insertAt(value, index) {
+        if(index === 0) {
+            this.prepend(value);
+            return this
+        }
+
+        if(index === this.length) {
+            this.append(value);
+            return this
+        }
+        
+        const current = this.at(index-1)
+        const newNode = new Node(value);
+        newNode.nextNode = current.nextNode
+        current.nextNode = newNode
+
+        this.length++
+        return this
+    }
+
+    removeAt(index){
+        if(!this.head || index < 0 || index >= this.length) return this;
+        if(index === 0) {
+            this.head = this.head.nextNode
+            if(!this.head) this.tail = null
+        } else {
+            let nodeBeforeDelete = this.at(index-1);
+            let nodeToDelete = nodeBeforeDelete.nextNode;
+            nodeBeforeDelete.nextNode = nodeToDelete.nextNode;
+            if(index === this.length-1) this.tail = nodeBeforeDelete
+        }
+        this.length--
+        return this
+    }
 }
-
-
-// const list = new LinkedList()
-// console.log(list.append(5))
-// console.log(list.append(7))
-// console.log(list.prepend(7))
-
-// console.log(list.size())
-// console.log(list)
-
-// console.log(list.head())
-// console.log(list.at(1))
-// console.log(list.toString())
-
